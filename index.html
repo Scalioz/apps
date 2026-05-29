@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apps — Scalioz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --accent: #7B61FF;
+    --accent2: #00E5C3;
+    --text: #f0eff8;
+    --muted: #6b6a80;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    overflow: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(123,97,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,97,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  /* Glowing orbs */
+  body::after {
+    content: '';
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(123,97,255,0.12) 0%, transparent 70%);
+    top: -150px;
+    right: -100px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .orb2 {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,195,0.08) 0%, transparent 70%);
+    bottom: -80px;
+    left: -60px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  /* Top brand bar */
+  .brand {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+  }
+
+  .brand-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .brand-logo span {
+    color: var(--accent);
+  }
+
+  .brand-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* Main content */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid rgba(123,97,255,0.4);
+    border-radius: 100px;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 9vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.8s 0.1s ease both;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 .line2 {
+    display: block;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 2rem auto 3rem;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  /* Phone CTA */
+  .cta-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .cta-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .phone-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 2rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    text-decoration: none;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .phone-link:hover {
+    border-color: rgba(123,97,255,0.5);
+    background: rgba(123,97,255,0.08);
+    transform: translateY(-2px);
+  }
+
+  .phone-link svg {
+    width: 20px; height: 20px;
+    stroke: var(--accent2);
+    flex-shrink: 0;
+  }
+
+  /* Countdown */
+  .countdown-wrap {
+    margin-top: 3.5rem;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .countdown-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .countdown {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .cd-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 64px;
+  }
+
+  .cd-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+
+  .cd-lbl {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* Footer */
+  .footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 1rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    z-index: 10;
+  }
+
+  .footer a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer a:hover { color: var(--text); }
+
+  .dot-sep { margin: 0 8px; opacity: 0.3; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scan line flicker on numbers */
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96%            { opacity: 0.7; }
+  }
+
+  .cd-num { animation: flicker 4s ease infinite; }
+  .cd-box:nth-child(2) .cd-num { animation-delay: 0.5s; }
+  .cd-box:nth-child(3) .cd-num { animation-delay: 1s; }
+  .cd-box:nth-child(4) .cd-num { animation-delay: 1.5s; }
+
+  @media (max-width: 480px) {
+    .brand { padding: 1rem 1.25rem; }
+    .footer { padding: 0.75rem 1.25rem; flex-direction: column; gap: 4px; text-align: center; }
+    .phone-link { font-size: 1.1rem; padding: 0.85rem 1.5rem; }
+    .cd-num { width: 54px; height: 54px; font-size: 1.6rem; }
+    .cd-box { min-width: 54px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb2"></div>
+
+<nav class="brand">
+  <a href="https://scalioz.com" class="brand-logo">SCALI<span>OZ</span></a>
+  <span class="brand-sub">apps.scalioz.com</span>
+</nav>
+
+<div class="wrap">
+
+  <div class="badge">Something is building</div>
+
+  <h1>
+    Apps are
+    <span class="line2">Coming Soon</span>
+  </h1>
+
+  <p class="subtitle">
+    We're crafting a suite of smart, practical apps for businesses.<br>
+    Check back soon — or reach out if you want to be first to know.
+  </p>
+
+  <div class="cta-wrap">
+    <span class="cta-label">Get in touch</span>
+    <a class="phone-link" href="tel:+919043946087">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.21 1.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      +91 90439 46087
+    </a>
+  </div>
+
+  <div class="countdown-wrap">
+    <div class="countdown-label">Launching in</div>
+    <div class="countdown">
+      <div class="cd-box"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Mins</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Secs</div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <span>© 2025 Scalioz</span>
+  <span>
+    <a href="https://scalioz.com">scalioz.com</a>
+    <span class="dot-sep">·</span>
+    <a href="https://websites.scalioz.com">websites</a>
+    <span class="dot-sep">·</span>
+    <a href="https://tools.scalioz.com">tools</a>
+  </span>
+</footer>
+
+<script>
+  // Launch date — 90 days from today
+  const launch = new Date();
+  launch.setDate(launch.getDate() + 90);
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    const diff = launch - Date.now();
+    if(diff <= 0){
+      document.getElementById('cd-d').textContent = '00';
+      document.getElementById('cd-h').textContent = '00';
+      document.getElementById('cd-m').textContent = '00';
+      document.getElementById('cd-s').textContent = '00';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-d').textContent = pad(d);
+    document.getElementById('cd-h').textContent = pad(h);
+    document.getElementById('cd-m').textContent = pad(m);
+    document.getElementById('cd-s').textContent = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
